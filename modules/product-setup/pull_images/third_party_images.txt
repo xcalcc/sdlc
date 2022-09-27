@@ -1,0 +1,6 @@
+jaeger-agent=hub.xcalibyte.co/sdlc/jaeger-agent:1.11
+cadvisor=hub.xcalibyte.co/sdlc/cadvisor:v0.32.0
+node-exporter=hub.xcalibyte.co/sdlc/node-exporter:v0.18.1
+kafka=hub.xcalibyte.co/sdlc/kafka:2.12-2.3.0
+zookeeper=hub.xcalibyte.co/sdlc/zookeeper:latest
+redis=hub.xcalibyte.co/sdlc/redis:5.0.9-alpine

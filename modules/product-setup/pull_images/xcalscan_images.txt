@@ -1,0 +1,11 @@
+apigateway=REGISTRY/xcalscan/xcal.apigateway:VERSION
+database=REGISTRY/xcalscan/xcal.database:VERSION
+scan-service=REGISTRY/xcalscan/xcal.scan-service:VERSION
+main-service=REGISTRY/xcalscan/xcal.main-service:VERSION
+xvsa=REGISTRY/xcalscan/xcal.xvsa:VERSION
+pro-verify=REGISTRY/xcalscan/xcal.pro-verify:VERSION
+pro-relay=REGISTRY/xcalscan/xcal.pro-relay:VERSION
+webfrontend=REGISTRY/xcalscan/xcal.webfrontend:VERSION
+rule-service=REGISTRY/xcalscan/xcal.rule-service:VERSION
+file-service=REGISTRY/xcalscan/xcal.file-service:VERSION
+notification-service=REGISTRY/xcalscan/xcal.notification-service:VERSION
