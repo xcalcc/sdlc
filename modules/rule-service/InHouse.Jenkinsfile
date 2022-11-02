@@ -13,6 +13,7 @@ pipeline {
       registry = "$REGISTRY"
       image_name = "$IMAGE_NAME"
       commit_id = "$COMMIT_ID"
+      NOTIFY_EMAILS = "$NOTIFY_EMAILS"
     }
 
     stages {
@@ -82,6 +83,17 @@ pipeline {
             }
         }
     }
+    
+    post ('Email notification') {
+        success {
+            echo "Image building success for rule service, sending email to $NOTIFY_EMAILS"
+            notifyBuild('SUCCESS')
+        }
+        failure {
+            echo "Image building failed for rule service, sending email to $NOTIFY_EMAILS"
+            notifyBuild('FAILED')
+        }
+    }
 }
 
 def getDate() {
@@ -90,4 +102,30 @@ def getDate() {
 
 def getCommitID() {
     return sh(returnStdout: true, script: "git rev-parse HEAD").trim()
+}
+
+
+def notifyBuild(String buildStatus = 'STARTED') {
+  // build status of null means successful
+  def notifyEmails = '${NOTIFY_EMAILS}'
+  if (notifyEmails) {
+    buildStatus = buildStatus ?: 'SUCCESS'
+    attachLogs = buildStatus == 'SUCCESS' ? false: true
+
+    // Default values
+    def subject = "${buildStatus}: Job '${AGENT} - ${env.JOB_NAME} [${env.BUILD_NUMBER}] '"
+    def details = '${SCRIPT, template="groovy-html.template"}'
+
+    emailext (
+        subject: subject,
+        body: details,
+        attachLog: attachLogs,
+        mimeType: 'text/html',
+        compressLog: true,
+        from: 'Jenkins',
+        to: notifyEmails
+    )
+  } else {
+    echo "No NOTIFY_EMAILS specified, skip sending email notifiactions..."
+  }
 }

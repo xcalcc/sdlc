@@ -36,12 +36,12 @@ get_ver() {
 
 get_ver
 
-mkdir workdir
+mkdir -p workdir
 cp VER workdir
 
 echo "Building excutable lib..."
-mkdir lib
-docker run --rm -v $(pwd)/lib:/home/lib -w /home xcal.build.ruleservice:2.0 bash /home/buildrul.sh $BRANCH
+mkdir -p lib
+docker run --rm -v $(pwd)/lib:/home/lib -w /home hub.xcalibyte.co/sdlc/xcal.build.ruleservice:2.0 bash /home/buildrul.sh $BRANCH
 echo "Building image..."
 docker build -t ${IMAGE_NAME}:${COMMIT_ID} -f InHouse.Dockerfile .
 docker tag ${IMAGE_NAME}:${COMMIT_ID} ${IMAGE_NAME}:${VERSION}

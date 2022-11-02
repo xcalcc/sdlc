@@ -87,12 +87,21 @@ grab_ver() {
 }
 
 write_image_list_to_file() {
+  # clean PACKAGED_IMAGE_LIST_FILE first
+  echo "cleaning $PACKAGED_IMAGE_LIST_FILE"
+  echo "" > $PACKAGED_IMAGE_LIST_FILE
 
   for third_party_image in ${THIRD_PARTY_IMAGE_LIST[@]}; do
     echo $third_party_image >> $PACKAGED_IMAGE_LIST_FILE
   done
   for xcalscan_image in ${XCALSCAN_IMAGE_LIST[@]}; do
     echo $xcalscan_image >> $PACKAGED_IMAGE_LIST_FILE
+  done
+}
+
+clean_images() {
+  for xcalscan_image in ${XCALSCAN_IMAGE_LIST[@]}; do
+      docker rmi $xcalscan_image
   done
 }
 
@@ -105,6 +114,8 @@ main() {
   status_check $? "Grabing ver"
   write_image_list_to_file
   status_check $? "write_image_list_to_file"
+  #clean_images
+  #status_check $? "clean_images"
 }
 
 # TODO: check completeness

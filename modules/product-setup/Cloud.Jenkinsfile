@@ -14,6 +14,7 @@ pipeline {
         DOCKER_REGISTRY = "$REGISTRY"
         MODULE_NAME = "$MODULE_NAME"
         APIURL = "$APIURL"
+        NOTIFY_EMAILS = "$NOTIFY_EMAILS"
     }
     
     stages {
@@ -42,7 +43,7 @@ pipeline {
                           IMAGE_COMMITID=getCommitID()
                         }
                         echo "${DOCKER_IMAGE_NAME_REMOTE}:${IMAGE_COMMITID}"
-                        echo "COMMITID:${IMAGE_COMMITID}"    
+                        echo "COMMITID:${IMAGE_COMMITID}"
                     }
                 }
             }
@@ -100,6 +101,16 @@ pipeline {
             }
         }
     }
+    post ('Email notification') {
+        success {
+            echo "Image building success for cloud deployment, sending email to $NOTIFY_EMAILS"
+            notifyBuild('SUCCESS')
+        }
+        failure {
+            echo "Image building failed for cloud deployment, sending email to $NOTIFY_EMAILS"
+            notifyBuild('FAILED')
+        }
+    }
 }
 
 def getContainerID() {
@@ -123,4 +134,28 @@ def getCommitID() {
 
 def getXVSACommitID() {
     return sh(returnStdout: true, script: "curl -G -d 'refModule=xvsa' $APIURL/getmodid").trim()
+}
+
+def notifyBuild(String buildStatus = 'STARTED') {
+    // build status of null means successful
+  def notifyEmails = "$NOTIFY_EMAILS"
+  if (notifyEmails) {
+    buildStatus = buildStatus ?: 'SUCCESS'
+    attachLogs = buildStatus == 'SUCCESS' ? false: true
+        // Default values
+    def subject = "${buildStatus}: Job '${AGENT} - ${env.JOB_NAME} [${env.BUILD_NUMBER}] '"
+    def details = '${SCRIPT, template="groovy-html.template"}'
+
+    emailext (
+        subject: subject,
+        body: details,
+        attachLog: attachLogs,
+        mimeType: 'text/html',
+        compressLog: true,
+        from: 'Jenkins',
+        to: notifyEmails
+    )
+    } else {
+    echo "No NOTIFY_EMAILS specified, skip sending email notifiactions..."
+    }
 }

@@ -1,6 +1,6 @@
 FROM hub.xcalibyte.co/sdlc/xcal.build.webpage:1.1 AS builder
 
-RUN apt update && apt install make
+# RUN apt update && apt install make
 
 COPY workdir/ $WORK_DIR
 

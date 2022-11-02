@@ -21,6 +21,9 @@ pipeline {
       jfrog_path = "$JFROG_PATH"
       NEXUS_REPO_USER = "${NEXUS_REPO_USER ? NEXUS_REPO_USER : 'xxx'}"
       NEXUS_REPO_PSW = "${NEXUS_REPO_PSW ? NEXUS_REPO_PSW : 'xxx'}"
+      NOTIFY_EMAILS = "$NOTIFY_EMAILS"
+
+     AUTOTEST_SERVER_USER = 'xxx'
     }
 
     stages {

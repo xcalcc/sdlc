@@ -131,6 +131,9 @@ grab_ver() {
 }
 
 write_image_list_to_file() {
+  # clean PACKAGED_IMAGE_LIST_FILE first
+  echo "cleaning $PACKAGED_IMAGE_LIST_FILE"
+  echo "" > $PACKAGED_IMAGE_LIST_FILE
 
   for third_party_image in ${THIRD_PARTY_IMAGE_LIST[@]}; do
     echo $third_party_image >> $PACKAGED_IMAGE_LIST_FILE
